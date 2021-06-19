@@ -2,53 +2,82 @@
   <div class="form-group mb-2">
     <input type="text" class="form-control mr-2 mb-2" placeholder="buscar eventos"/>
   </div>
+  <label class="mr-2">Filtro:</label> <input type="text" class="form-control mr-2" placeholder="buscar"
+  [(ngModel)]="filtroLista">
 </div>
-
+<h3>Filtro: {{filtroLista}}</h3>
 <table class="table table-striped">
   <thead class="thead-dark">
     <tr>
       <th>
-       <button class="btn btn-outline-warning btn-sm"
-       (click)="alterarImagem()" >
-       Mostrar
+        <button class="btn btn-outline-warning btn-sm"
+        (click)="alterarImagem()" >
+        <i class="{{mostrarImagem ? 'fa fa-eye-slash' : 'fa fa-eye'}}"></i>
+        Mostrar
       </button>
-      </th>
-      <th>#</th>
-      <th>Tema</th>
-      <th>Local</th>
-      <th>Data</th>
-      <th>Qtd Pessoas</th>
-      <th>Lote</th>
-      <th>Opçoes</th>
-    </tr>
-  </thead>
-  <tbody *ngIf="eventos && eventos.length">
-    <tr *ngFor="let evento of eventos">
-      <td>
-        <img *ngIf="mostrarImagem"
-        src="http://localhost:5000/img/{{evento.imagemURL}}"
-        [style.width.px]="imagemLargura"
-        [style.margin.px]="imagemMargem">
-      </td>
-      <td>{{evento.eventoId}}</td>
-      <td>{{evento.tema}}</td>
-      <td>{{evento.local}}</td>
-      <td>{{evento.dataEvento}}</td>
-      <td>{{evento.qtdPessoas}}</td>
-      <td>{{evento.lote | uppercase}}</td>
-      <td>
-        <button class="btn btn-outline-primary"></button>
-        <button class="btn btn-outline-danger"></button>
-      </td>
-    </tr>
-  </tbody>
-  <tfoot *ngIf="!eventos.length">
-    <tr>
-      <td colspan="7" class="text-center">
-        <h4>
-          Nenhum evento encontrado!
-        </h4>
-      </td>
-    </tr>
-  </tfoot>
+    </th>
+    <th>#</th>
+    <th>Tema</th>
+    <th>Local</th>
+    <th>Data</th>
+    <th>Qtd Pessoas</th>
+    <th>Lote</th>
+    <th>Opçoes</th>
+  </tr>
+</thead>
+<tbody *ngIf="eventos && eventos.length">
+  <tr *ngFor="let evento of eventos">
+    <td>
+      <img *ngIf="mostrarImagem"
+      src="http://localhost:5000/img/{{evento.imagemURL}}"
+      [style.width.px]="imagemLargura"
+      [style.margin.px]="imagemMargem">
+    </td>
+    <td>{{evento.id}}</td>
+    <td>{{evento.tema}}</td>
+    <td>{{evento.local}}</td>
+    <td>{{evento.dataEvento | DateTimeFormatiPipe}}</td>
+    <td>{{evento.qtdPessoas}}</td>
+    <td>
+      <div ngIf="!evento.lotes.length">
+        Não informado!
+      </div>
+      <div ngIf="evento.lotes.length"> 
+        {{evento.lotes[0].nome | uppercase}}
+      </div>
+    </td>
+    <td>
+      <div class="btn-group">
+        <button class="btn btn-sm btn-outline-primary" tooltip="Editar" (click)="openModal(template)">
+          <i class="fa fa-edit"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger" tooltip="Excluir">
+          <i class="fa fa-erase"></i>
+        </button>
+      </div>
+      
+    </td>
+  </tr>
+</tbody>
+<tfoot *ngIf="!eventos.length">
+  <tr>
+    <td colspan="7" class="text-center">
+      <h4>
+        Nenhum evento encontrado!
+      </h4>
+    </td>
+  </tr>
+</tfoot>
 </table>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title- pull-left">Modal</h4>
+    <button class="close pull-rigth" type="button" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    
+  </div>
+</ng-template>
