@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Evento } from '../_models/Evento';
 import { EventoService } from '../_services/evento.service';
 
@@ -10,29 +11,30 @@ import { EventoService } from '../_services/evento.service';
 })
 export class EventosComponent implements OnInit {
   
-  eventosFiltrados: Evento[];
-  eventos: Evento[];
+  eventosFiltrados: Evento[] = [];
+  eventos: Evento[] = [];
   imagemLargura = 50;
   imagemMargem = 2;
   mostrarImagem = false;
-  modalRef:BsModalRef;
+  modalRef = {} as BsModalRef;
 
-  _filtroLista ='';
+  _filtroLista: string ='';
 
   constructor(
-              private eventoService: EventoService
-              , private modalService: BsModalRef
-              ) { }
+    private eventoService: EventoService
+    ,private modalService: BsModalService
+    ) { }
 
-  get filtroLista(): string{
-   return this. filtroLista;
+  get filtolista(){
+    return this._filtroLista;
   }
+
   set filtroLista(value: string){
     this. filtroLista = value;
     this.eventosFiltrados = this.filtroLista ? this.filtrarEventos(this.filtroLista) : this.eventos;
   }
 
-  openModal(template: TemplateRef<any>){
+  openModal(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template);
   }
 
@@ -49,6 +51,10 @@ export class EventosComponent implements OnInit {
   
   alterarImagem(){
     this.mostrarImagem = !this.mostrarImagem;
+  }
+
+  salvarAlteracao(){
+
   }
 
   getEventos(){

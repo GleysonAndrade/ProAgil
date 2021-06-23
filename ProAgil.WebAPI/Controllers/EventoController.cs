@@ -6,7 +6,7 @@ using ProAgil.Repository;
 
 namespace ProAgil.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[Controller]")]
     [ApiController]
     public class EventoController : ControllerBase
     {
@@ -14,9 +14,9 @@ namespace ProAgil.WebAPI.Controllers
         public EventoController(IProAgilRepository repo)
         {
             _repo = repo;
-
         }
 
+        // GET api/evento
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -28,11 +28,11 @@ namespace ProAgil.WebAPI.Controllers
             }
             catch (System.Exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de Dados Desconectado!");
-            }
-            
+               return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
+            } 
         }
 
+        // GET api/evento
         [HttpGet("{EventoId}")]
         public async Task<IActionResult> Get(int EventoId)
         {
@@ -44,72 +44,74 @@ namespace ProAgil.WebAPI.Controllers
             }
             catch (System.Exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de Dados Desconectado!");
-            }
-            
+               return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
+            } 
         }
 
+        // GET api/evento
         [HttpGet("getByTema{tema}")]
         public async Task<IActionResult> Get(string tema)
         {
             try
             {
-                var results = await _repo.GetAllEventosAsyncByTema(tema,true);
+                var results = await _repo.GetAllEventosAsyncByTema(tema, true);
 
                 return Ok(results);
             }
             catch (System.Exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de Dados Desconectado!");
-            }
-            
+               return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
+            } 
         }
 
+        //Rota de Inclusão
         [HttpPost]
         public async Task<IActionResult> Post(Evento model)
         {
             try
             {
                 _repo.Add(model);
+
                 if(await _repo.SaveChancesAsync()){
-                    return Created($"/api/evento{model.Id}",model);
+                    return Created($"/api/evento/{model.Id}", model);
                 }
             }
             catch (System.Exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de Dados Desconectado!");
-            }
+               return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
+            } 
+
             return BadRequest();
         }
-
+        //Rota de Edição
         [HttpPut]
         public async Task<IActionResult> Put(int EventoId, Evento model)
         {
             try
             {
-                var evento  = await _repo.GetEventosAsyncById(EventoId, false);
+                var evento = await _repo.GetEventosAsyncById(EventoId, false);
                 if(evento == null) return NotFound();
-
                 _repo.Update(model);
+
                 if(await _repo.SaveChancesAsync()){
-                    return Created($"/api/evento{model.Id}",model);
+                    return Created($"/api/evento/{model.Id}", model);
                 }
             }
             catch (System.Exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de Dados Desconectado!");
-            }
+               return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
+            } 
+
             return BadRequest();
         }
-        
+
         [HttpDelete]
-        public async Task<IActionResult> Delete(int EventoId, Evento model)
+        public async Task<IActionResult> Delete(int EventoId)
         {
             try
             {
-                var evento  = await _repo.GetEventosAsyncById(EventoId, false);
+                var evento = await _repo.GetEventosAsyncById(EventoId, false);
                 if(evento == null) return NotFound();
-
                 _repo.Delete(evento);
 
                 if(await _repo.SaveChancesAsync()){
@@ -118,10 +120,11 @@ namespace ProAgil.WebAPI.Controllers
             }
             catch (System.Exception)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de Dados Desconectado!");
-            }
+               return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco de dados falhou");
+            } 
+
             return BadRequest();
         }
-
+        
     }
 }
